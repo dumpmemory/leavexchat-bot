@@ -6,82 +6,58 @@
 
 ## 安装准备
 
-1. 安装 Node.js 12+ 官网: https://nodejs.org
+1. 安装 [Bun](https://bun.sh) 运行时
 2. 访问 https://t.me/BotFather, 申请你的 `bot token`
 3. 安装 ffmpeg (可选，将 Telegram 语音（oga 文件）转换成 mp3 发送给微信)
 
 ## 快速开始
 
-Linux 使用前需要安装如下依赖，新版 wechaty 只支持Ubuntu:
-
-~~CentOS 7~~
-
-```
-yum install libX11 pango.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXtst.x86_64 cups-libs.x86_64 libXScrnSaver.x86_64 libXrandr.x86_64 GConf2.x86_64 alsa-lib.x86_64 atk.x86_64 gtk3.x86_64 ipa-gothic-fonts xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-utils xorg-x11-fonts-cyrillic xorg-x11-fonts-Type1 xorg-x11-fonts-misc -y
-```
-
-~~CentOS 8~~
-
-```
-dnf install -y libX11-xcb libXtst libXScrnSaver alsa-lib-devel at-spi2-atk gtk3
-
-alsa-lib.x86_64 atk.x86_64 cups-libs.x86_64 gtk3.x86_64 libXcomposite.x86_64 libXcursor.x86_64 libXdamage.x86_64 libXext.x86_64 libXi.x86_64 libXrandr.x86_64  pango.x86_64 xorg-x11-fonts-100dpi xorg-x11-fonts-75dpi xorg-x11-fonts-cyrillic xorg-x11-fonts-misc xorg-x11-fonts-Type1 xorg-x11-utils
-
-// http://www.ajisaba.net/javascript/puppeteer/lib_error_centos7.html
-```
-
-
-Ubuntu
-
-```
-apt-get update && \
-     apt-get install -yq --no-install-recommends \
-     libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
-     libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
-     libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 \
-     libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
-     libnss3 libgbm-dev libxshmfence-dev
-```
-
-**`libgbm-dev libxshmfence-dev` 是 2.5.0 版本新需要的依赖**
-
-## 自行编译
+### 1. 克隆并安装依赖
 
 ```bash
-$> git clone https://github.com/UnsignedInt8/leavexchat-bot.git
-$> cd leavexchat-bot
-$> yarn
-$> yarn build
-$> node build/main/index.js # 无需配置文件
-$> 输入 token, Done!
+git clone https://github.com/UnsignedInt8/leavexchat-bot.git
+cd leavexchat-bot
+bun install
 ```
 
-由于中国用户无法直接访问 Telegram，所以需要在配置文件 `config.json` 中指定 SOCKS5 代理:
-
-`config.json` 请参照 [config-example.json](./config-example.json) 填写。
+### 2. 安装 Puppeteer Chromium 系统依赖（Ubuntu/Debian）
 
 ```bash
-# 使用配置文件方式
-$> node build/main/index.js -c config.json
+apt-get install -y \
+  libatk1.0-0 libatk-bridge2.0-0 libatspi2.0-0 \
+  libcups2 libgbm1 \
+  libpango-1.0-0 libcairo2 \
+  libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+  libasound2t64
 ```
 
-** 如果安装遇到问题，清空 node_modules，再重新安装所有依赖 **
+### 3. 配置并启动
 
-## 作者的用法
-
-2.0 版本已经加入了 wechat **会话恢复**功能。要发挥该特性，就需要进程守护，推荐使用 forever
+复制配置文件模板，填写你的 bot token：
 
 ```bash
-$> npm i -g forever
-
-$> git clone https://github.com/UnsignedInt8/leavexchat-bot.git
-$> cd leavexchat-bot
-$> yarn
-$> yarn build
-$> forever build/main/index.js -c config.json
+cp config-example.json config.json
 ```
 
-这样可以大幅降低扫码登录的频次
+`config.json` 字段说明请参照 [config-example.json](./config-example.json)。
+
+```bash
+# 使用配置文件启动
+bun start -c config.json
+
+# 或不带配置文件（交互式输入 token）
+bun start
+```
+
+## 进程守护
+
+推荐使用 PM2 保持后台运行，实现会话恢复（大幅降低扫码频次）：
+
+```bash
+npm i -g pm2
+pm2 start --interpreter=bun src/index.ts -- -c config.json
+pm2 save
+```
 
 ## Bot 命令
 
