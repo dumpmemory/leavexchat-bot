@@ -34,6 +34,7 @@ import Logger from './lib/Logger';
 import MiscHelper from './lib/MiscHelper';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import crypto from 'crypto';
+import fs from 'fs';
 import dayjs from 'dayjs';
 import { findContact } from './bot/HandleFindX';
 import lang from './strings';
@@ -62,6 +63,7 @@ export interface BotOptions {
   };
   keepMsgs?: number;
   silent?: boolean;
+  chromePath?: string; // path to Chrome/Chromium executable (needed on Apple Silicon)
 }
 
 export interface Client {
@@ -99,6 +101,22 @@ export default class Bot {
 
   constructor(options: BotOptions) {
     this.options = options;
+
+    // Resolve Chrome path for puppeteer (required on Apple Silicon where bundled Chromium is x86_64)
+    const chromePath =
+      options.chromePath ||
+      process.env.PUPPETEER_EXECUTABLE_PATH ||
+      [
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/Applications/Chromium.app/Contents/MacOS/Chromium',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+      ].find((p) => fs.existsSync(p));
+
+    if (chromePath) {
+      process.env.PUPPETEER_EXECUTABLE_PATH = chromePath as string;
+      Logger.info(`Using Chrome: ${chromePath}`);
+    }
 
     const botid = crypto
       .createHash('sha256')
@@ -362,11 +380,27 @@ export default class Bot {
   private createClient(chatid: number) {
     if (this.clients.has(chatid)) return this.clients.get(chatid);
 
+    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    const { socks5Proxy, httpProxy } = this.options;
+    const proxyArg = socks5Proxy
+      ? `--proxy-server=socks5://${socks5Proxy.host}:${socks5Proxy.port}`
+      : httpProxy
+        ? `--proxy-server=http://${httpProxy.host}:${httpProxy.port}`
+        : undefined;
+
+    const launchOptions: Record<string, any> = {};
+    if (executablePath) launchOptions.executablePath = executablePath;
+    if (proxyArg) launchOptions.args = [proxyArg];
+
     let wechat =
       this.recoverWechats.get(chatid) ||
       WechatyBuilder.build({
         name: `telegram_${chatid})}`,
         puppet: 'wechaty-puppet-wechat',
+        puppetOptions:
+          Object.keys(launchOptions).length > 0
+            ? { launchOptions }
+            : undefined,
       });
 
     let client: Client = {

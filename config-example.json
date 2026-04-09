@@ -2,6 +2,7 @@
   "token": "", // required, telegram bot token
   "silent": false, // silent mode, bot alert
   "allows": [], // telegram uid
+  "chromePath": "", // optional: path to Chrome/Chromium executable, auto-detected if omitted
   "httpProxy": {
     "host": "127.0.0.1",
     "port": 1081
