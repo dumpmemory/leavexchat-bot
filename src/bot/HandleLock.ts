@@ -1,8 +1,9 @@
-import Bot, { Client } from '../Bot';
+import Bot from '../Bot';
+import type { Client } from '../Bot';
 import { Contact, Room } from 'wechaty';
 
-import { Context } from 'telegraf/typings/context';
-import { Message } from 'telegraf/typings/core/types/typegram';
+import type { Context } from 'telegraf';
+import type { Message } from 'telegraf/types';
 import lang from '../strings';
 import { writeFile } from './UpdateTmpFile';
 

@@ -1,6 +1,6 @@
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
-import { Message } from 'telegraf/typings/core/types/typegram';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
+import type { Message } from 'telegraf/types';
 import lang from '../strings';
 import { writeFile } from './UpdateTmpFile';
 

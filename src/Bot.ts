@@ -8,11 +8,11 @@ import {
   WechatyBuilder,
 } from 'wechaty';
 import { Context, Markup, Telegraf } from 'telegraf';
-import {
+import type {
   Message as TTMessage,
   Update as TTUpdate,
   UserFromGetMe,
-} from 'telegraf/typings/core/types/typegram';
+} from 'telegraf/types';
 import {
   handleCurrent,
   handleFind,
@@ -41,7 +41,8 @@ import qr from 'qr-image';
 import { readFile } from './bot/UpdateTmpFile';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-const { version } = require('../../package.json');
+import pkg from '../package.json';
+const { version } = pkg;
 
 dayjs.extend(relativeTime);
 
@@ -175,7 +176,7 @@ export default class Bot {
           true
         )}]</code>`,
         {
-          reply_to_message_id: ctx['user'].firstMsgId,
+          reply_parameters: { message_id: ctx['user'].firstMsgId },
         }
       );
     };
@@ -389,7 +390,7 @@ export default class Bot {
       if (!(await c(ctx))) return;
     }
 
-    if (!this.options.allows?.includes(ctx.message.chat.id) ?? true) {
+    if (!this.options.allows?.includes(ctx.message.chat.id)) {
       return ctx.reply(lang.nowelcome);
     }
 

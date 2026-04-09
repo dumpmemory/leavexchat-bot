@@ -1,16 +1,15 @@
-import * as TT from 'telegraf/typings/telegram-types';
 import * as XMLParser from '../lib/XmlParser';
 import * as fs from 'fs/promises';
 
 import { Contact, Message } from 'wechaty';
-import {
+import type {
   Message as TTMessage,
   UserFromGetMe,
-} from 'telegraf/typings/core/types/typegram';
+  CommonMessageBundle,
+} from 'telegraf/types';
 
 import Bot from '../Bot';
-import { CommonMessageBundle } from 'telegraf/typings/core/types/typegram';
-import { Context } from 'telegraf/typings/context';
+import type { Context } from 'telegraf';
 import HTMLTemplates from '../lib/HTMLTemplates';
 import Logger from '../lib/Logger';
 import ce from 'command-exists';

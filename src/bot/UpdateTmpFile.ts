@@ -1,6 +1,8 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
-import tmpDir from 'temp-dir';
+
+const tmpDir = os.tmpdir();
 
 interface ITmpFile {
   recentContact?: { name: string; locked?: boolean };

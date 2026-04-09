@@ -1,5 +1,5 @@
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
 import MiscHelper from '../lib/MiscHelper';
 import lang from '../strings';
 import { writeFile } from './UpdateTmpFile';

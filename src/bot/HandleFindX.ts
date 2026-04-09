@@ -1,10 +1,10 @@
 import { Contact, Room, Wechaty } from 'wechaty';
 
 import Bot from '../Bot';
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
 import Logger from '../lib/Logger';
-import { Message } from 'telegraf/typings/core/types/typegram';
+import type { Message } from 'telegraf/types';
 import lang from '../strings';
 import { writeFile } from './UpdateTmpFile';
 

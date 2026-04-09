@@ -1,38 +1,39 @@
 import * as fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 import { Contact, Room } from 'wechaty';
 
-import got from 'got';
-import path from 'path';
-import tmpDir from 'temp-dir';
-import touch from 'touch';
+const tmpDir = os.tmpdir();
 
 export default class MiscHelper {
-  static async fileExists(path: string) {
+  static async fileExists(p: string) {
     try {
-      await fs.promises.stat(path);
+      await fs.promises.stat(p);
       return true;
     } catch (error) {
       return false;
     }
   }
 
-  static async download(url: string, path: string) {
-    return new Promise<boolean>(async (resolve) => {
-      if (await this.fileExists(path)) resolve(true);
-      got.stream(url).pipe(fs.createWriteStream(path)).end(resolve(true));
-    });
+  static async download(url: string, filePath: string) {
+    if (await this.fileExists(filePath)) return true;
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    await fs.promises.writeFile(filePath, Buffer.from(buffer));
+    return true;
   }
 
-  static async deleteFile(path: string) {
-    return new Promise<void>((resolve) => fs.unlink(path, (_) => resolve()));
+  static async deleteFile(p: string) {
+    return new Promise<void>((resolve) => fs.unlink(p, (_) => resolve()));
   }
 
   static async createTmpFile(filename: string) {
     const filepath = path.join(tmpDir, filename);
-
     try {
-      await touch(filepath);
+      // Touch: create file if it doesn't exist, update mtime if it does
+      const fd = await fs.promises.open(filepath, 'a');
+      await fd.close();
     } catch (error) {}
   }
 
@@ -43,7 +44,6 @@ export default class MiscHelper {
           resolve([]);
           return;
         }
-
         resolve(files.filter((f) => f.startsWith(startsWith)));
       });
     });

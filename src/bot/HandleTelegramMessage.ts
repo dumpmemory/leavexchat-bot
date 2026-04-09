@@ -1,11 +1,9 @@
-import * as TT from 'telegraf/typings/telegram-types';
-
 import { Contact, Room } from 'wechaty';
-import { Message, UserFromGetMe } from 'telegraf/typings/core/types/typegram';
+import type { Message, UserFromGetMe } from 'telegraf/types';
 
-import { BotOptions } from '../Bot';
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
+import type { BotOptions } from '../Bot';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
 import { FileBox } from 'file-box';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import Logger from '../lib/Logger';
@@ -112,7 +110,7 @@ export default async (
         await contact.say(FileBox.fromFile(distFile));
         if (
           (msg as Message.CaptionableMessage).caption &&
-          (msg as Message.TextMessage).forward_from?.id !== bot.id
+          (msg as any).forward_from?.id !== bot.id
         )
           await contact.say((msg as Message.CaptionableMessage).caption);
 
@@ -122,7 +120,7 @@ export default async (
           '';
 
         await ctx.reply(lang.message.sendingSucceed(name), {
-          reply_to_message_id: msg.message_id,
+          reply_parameters: { message_id: msg.message_id },
         });
 
         if (!user.contactLocked) user.currentContact = contact;
@@ -133,7 +131,7 @@ export default async (
         if (tries > 0) continue;
 
         await ctx.reply(lang.message.sendingFileFailed, {
-          reply_to_message_id: msg.message_id,
+          reply_parameters: { message_id: msg.message_id },
         });
         Logger.error(error.message);
       }

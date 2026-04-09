@@ -1,6 +1,6 @@
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
-import { Message } from 'telegraf/typings/core/types/typegram';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
+import type { Message } from 'telegraf/types';
 import MiscHelper from '../lib/MiscHelper';
 import lang from '../strings';
 
@@ -39,6 +39,6 @@ export default async (ctx: Context) => {
 
   const name = await MiscHelper.getFriendlyName(target || user.currentContact);
   await ctx.reply(lang.message.msgForward(name), {
-    reply_to_message_id: msg.reply_to_message.message_id,
+    reply_parameters: { message_id: msg.reply_to_message.message_id },
   });
 };

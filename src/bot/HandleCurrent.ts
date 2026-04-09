@@ -1,7 +1,7 @@
 import { Contact, Room } from 'wechaty';
 
-import { Client } from '../Bot';
-import { Context } from 'telegraf/typings/context';
+import type { Client } from '../Bot';
+import type { Context } from 'telegraf';
 import lang from '../strings';
 
 export default async (ctx: Context) => {

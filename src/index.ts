@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import Bot, { BotOptions } from './Bot';
+import Bot from './Bot';
+import type { BotOptions } from './Bot';
 
 import { Command } from 'commander';
 import Logger from './lib/Logger';
@@ -8,7 +9,7 @@ import fs from 'fs';
 import inquirer from 'inquirer';
 
 // Called directly
-if (require.main === module) {
+if (import.meta.main) {
   let program = new Command()
     .option('-c, --config [path]', 'Configruation File Path', String)
     .parse(process.argv);
@@ -56,4 +57,5 @@ if (require.main === module) {
   process.title = 'leavexchat';
 }
 
-export { Bot, Logger, BotOptions };
+export { Bot, Logger };
+export type { BotOptions };

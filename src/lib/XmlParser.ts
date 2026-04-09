@@ -3,7 +3,7 @@ import { HTMLElement, parse } from 'node-html-parser';
 import Mercury from '@postlight/mercury-parser';
 import { XMLParser } from 'fast-xml-parser';
 import h2m from 'h2m';
-import marked from 'marked';
+import { marked } from 'marked';
 
 function replaceMarkdownChars(txt: string | object) {
   if (!txt) return '';
@@ -88,7 +88,7 @@ export async function convertXmlToTelegraphMarkdown(
       excerpt: string;
     };
 
-    const html = marked(content, {});
+    const html = marked.parse(content) as string;
     const root = parse(html, {}) as HTMLElement;
 
     const convert = (n: HTMLElement) => {
