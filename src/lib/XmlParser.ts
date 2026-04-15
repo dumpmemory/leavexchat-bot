@@ -12,6 +12,7 @@ function replaceMarkdownChars(txt: string | object) {
 }
 
 const xml = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
+
 export function parseOffical(rawXml: string): string {
   try {
     const msg = xml.parse(rawXml);
@@ -20,7 +21,7 @@ export function parseOffical(rawXml: string): string {
     ] as Array<any>;
     return items.reduce((prev, curr) => {
       let title = h2m(replaceMarkdownChars(curr['title']));
-      let url = (curr['url'] as string).replace('xtrack=1', 'xtrack=0');
+      let url = (curr['url'] as string).replace('xtrack=1', 'xtrack=0').replaceAll('http://', 'https://');
 
       return `${prev}[${title}](${url})\n\n`;
     }, '');

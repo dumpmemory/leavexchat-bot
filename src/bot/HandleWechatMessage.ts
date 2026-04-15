@@ -1,12 +1,12 @@
 import * as XMLParser from '../lib/XmlParser';
 import * as fs from 'fs/promises';
 
-import { Contact, Message } from 'wechaty';
 import type {
+  CommonMessageBundle,
   Message as TTMessage,
   UserFromGetMe,
-  CommonMessageBundle,
 } from 'telegraf/types';
+import { Contact, Message } from 'wechaty';
 
 import Bot from '../Bot';
 import type { Context } from 'telegraf';
@@ -134,7 +134,7 @@ export default async (self: Bot, msg: Message, ctx: Context) => {
           from.type() === ContactType.Official
             ? XMLParser.parseOffical(xml)
             : XMLParser.parseAttach(xml);
-        sent = await ctx.replyWithMarkdown(
+        sent = await ctx.replyWithMarkdownV2(
           HTMLTemplates.markdown({ nickname, content: markdown })
         );
       } catch (error) {
