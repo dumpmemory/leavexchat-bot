@@ -2,7 +2,6 @@
 
 import Bot from './Bot';
 import type { BotOptions } from './Bot';
-
 import { Command } from 'commander';
 import Logger from './lib/Logger';
 import fs from 'fs';
@@ -54,7 +53,7 @@ if (import.meta.main) {
   process.on('uncaughtException', bot.handleFatalError);
   process.on('unhandledRejection', bot.handleFatalError);
 
-  process.title = 'leavexchat';
+  process.title = 'wallchat';
 }
 
 export { Bot, Logger };

@@ -34,15 +34,15 @@ import Logger from './lib/Logger';
 import MiscHelper from './lib/MiscHelper';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import crypto from 'crypto';
-import fs from 'fs';
 import dayjs from 'dayjs';
 import { findContact } from './bot/HandleFindX';
+import fs from 'fs';
 import lang from './strings';
+import pkg from '../package.json';
 import qr from 'qr-image';
 import { readFile } from './bot/UpdateTmpFile';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
-import pkg from '../package.json';
 const { version } = pkg;
 
 dayjs.extend(relativeTime);
@@ -125,7 +125,7 @@ export default class Bot {
       .toString('hex')
       .substring(0, 4);
 
-    this.id = `leavexchat_${botid}.`;
+    this.id = `wallchat_${botid}.`;
 
     const { token, socks5Proxy, keepMsgs, httpProxy } = options;
     this.keepMsgs =

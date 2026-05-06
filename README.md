@@ -15,8 +15,8 @@
 ### 1. 克隆并安装依赖
 
 ```bash
-git clone https://github.com/UnsignedInt8/leavexchat-bot.git
-cd leavexchat-bot
+git clone https://github.com/UnsignedInt8/wallchat.git
+cd wallchat
 bun install
 ```
 
